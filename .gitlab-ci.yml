@@ -2,12 +2,8 @@ stages:
   - build
     #- test
   - deploy
-<<<<<<< HEAD
   - revert
-=======
-    #- revert
->>>>>>> f2db9e5083ebc76ab0e60f0efd81f79d8f240eb5
-
+  
     #variables:
     #docker_html_path: "/www"
     #env: prod
@@ -32,6 +28,7 @@ install_dependencies:
         - yarn.lock
     paths:
       - node_modules
+
 test:
   stage: deploy
   script:
@@ -84,11 +81,11 @@ test:
   
   
   
-  revert:
-    stage: revert
-    when: manual
-    script:
-        - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html        
+revert:
+  stage: revert
+  when: manual
+  script:
+    - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html        
         #- cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
 
 
