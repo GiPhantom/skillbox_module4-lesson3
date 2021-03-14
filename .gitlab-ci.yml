@@ -17,11 +17,11 @@ install_dependencies:
   script:
     - yarn install
     - yarn build
-    - mv build build_$env
+    #- mv build build_$env
   artifacts:
     paths:
       - node_modules
-      - build_$env
+      - build
   cache:
     key:
       files:
