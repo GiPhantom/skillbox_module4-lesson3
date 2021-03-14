@@ -4,10 +4,10 @@ stages:
   - deploy
   - revert
   
-    #variables:
-    #docker_html_path: "/www"
-    #env: prod
-    #deploy_subfolder: html
+variables:
+  docker_html_path: "/www"
+  env: prod
+  deploy_subfolder: html
 
 
 
