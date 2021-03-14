@@ -1,13 +1,13 @@
 stages:
   - build
     #- test
-    - deploy
-    #- revert
+  - deploy
+  - revert
 
-variables:
-  docker_html_path: "/www"
-  env: prod
-  deploy_subfolder: html
+    #variables:
+    #docker_html_path: "/www"
+    #env: prod
+    #deploy_subfolder: html
 
 
 
@@ -32,6 +32,7 @@ test:
   stage: deploy
   script:
     - cp -r build /www/test-app/$CI_COMMIT_SHA
+    - cp -Pv /www/html/ /www/test-app/$CI_COMMIT_SHA/prev-version  
     - ln -fsnv /var/www/test-app/$CI-COMMIT_SHA /www/html  
         #build_staging:
         #extends: install_dependencies
@@ -76,13 +77,14 @@ test:
         #only:
         #- master
 
-
-
-
-        #revert:
-        #stage: revert
-        #when: manual
-        #script:
+  
+  
+  
+  revert:
+    stage: revert
+    when: manual
+    script:
+        - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html        
         #- cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
 
 
