@@ -2,7 +2,11 @@ stages:
   - build
     #- test
   - deploy
+<<<<<<< HEAD
   - revert
+=======
+    #- revert
+>>>>>>> f2db9e5083ebc76ab0e60f0efd81f79d8f240eb5
 
     #variables:
     #docker_html_path: "/www"
