@@ -37,7 +37,7 @@ test:
     - cp -r build /www/test-app/$CI_COMMIT_SHA
     - cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA /prev-version  
     - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA $ /www/html  
-    - date '+%Y:%m:%d %H:%m:%S.%N'
+    
         #build_staging:
         #extends: install_dependencies
         #variables:
