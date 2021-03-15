@@ -35,8 +35,8 @@ test:
     - stagshell
   script:
     - cp -r build /www/test-app/$CI_COMMIT_SHA
-    - cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA /prev-version  
-    - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA $ /www/html  
+    - cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA/prev-version  
+    - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA /www/html  
     
         #build_staging:
         #extends: install_dependencies
@@ -91,7 +91,7 @@ revert:
 
   when: manual
   script:
-    - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA /prev-version /www/html  
+    - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html  
     - date '+%Y:%m:%d %H:%m:%S.%N'   
         #- cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
 
