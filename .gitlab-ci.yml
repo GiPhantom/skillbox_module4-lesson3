@@ -31,6 +31,8 @@ install_dependencies:
 
 test:
   stage: deploy
+  tags:
+    - stagshell
   script:
     - cp -r build /www/test-app/$CI_COMMIT_SHA
       #   - cp -Pv /www/html/ /www/test-app/$CI_COMMIT_SHA/prev-version  
@@ -83,6 +85,9 @@ test:
   
 revert:
   stage: revert
+  tags:
+    - stagshell
+
   when: manual
   script:
     - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html        
