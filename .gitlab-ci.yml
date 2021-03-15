@@ -35,7 +35,7 @@ test:
     - stagshell
   script:
     - cp -r build /www/test-app/$CI_COMMIT_SHA
-      #   - cp -Pv /www/html/ /www/test-app/$CI_COMMIT_SHA/prev-version  
+    - cp -Pv /www/html/ /www/test-app/$CI_COMMIT_SHA/prev-version  
     - ln -fsnv /var/www/test-app/$CI-COMMIT_SHA /www/html  
         #build_staging:
         #extends: install_dependencies
