@@ -17,11 +17,11 @@ install_dependencies:
   script:
     - yarn install
     - yarn build
-    #- mv build build_$env
+    - mv build build_$env
   artifacts:
     paths:
       - node_modules
-      - build
+      - build_$env
   cache:
     key:
       files:
@@ -37,51 +37,50 @@ test:
     - cp -r build /www/test-app/$CI_COMMIT_SHA
     - cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA/prev-version  
     - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA /www/html  
-    
-        #build_staging:
-        #extends: install_dependencies
-        #variables:
-        #env: staging
-        #REACT_APP_WEBSITE_PREFIX: "[staging] "
-        #PUBLIC_URL: "/$CI_COMMIT_BRANCH"
+   
 
-        #deploy_staging:
-        #extends: deploy_prod
-        #variables:
-        #deploy_subfolder: staging/$CI_COMMIT_BRANCH
-        #env: staging
-        #when: always
-        #only:
-        #- master
-        #- /feature-.*/
+build_staging:
+  extends: install_dependencies
+  variables:
+    env: staging
+    REACT_APP_WEBSITE_PREFIX: "[staging] "
+    PUBLIC_URL: "/$CI_COMMIT_BRANCH"
 
-        #deploy_prod:
-        #stage: deploy
-        #script:
-        #- cp -r build_$env $docker_html_path/test-app/${env}_$CI_COMMIT_SHA
-        #- cp -Pv $docker_html_path/$deploy_subfolder $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
-        #only:
-        #- master
+deploy_staging:
+  extends: deploy_prod
+  variables:
+    deploy_subfolder: staging/$CI_COMMIT_BRANCH
+    env: staging
+   when: always
+   only:
+     - master
+     - /feature-.*/
 
-        #activate_staging:
-        #extends: activate_prod
-        #variables:
-        #deploy_subfolder: staging/$CI_COMMIT_BRANCH
-        #env: staging
-        #when: always
-        #only:
-        #- master
-        #- /feature-.*/
+deploy_prod:
+  stage: deploy
+  script:
+    - cp -r build_$env $docker_html_path/test-app/${env}_$CI_COMMIT_SHA
+    - cp -Pv $docker_html_path/$deploy_subfolder $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
+   only:
+    - master
 
-        #activate_prod:
-        #stage: deploy
-        #script:
-        #- ln -fsnv /var/www/test-app/${env}_$CI_COMMIT_SHA $docker_html_path/$deploy_subfolder
-        #when: manual
-        #only:
-        #- master
+activate_staging:
+  extends: activate_prod
+  variables:
+    deploy_subfolder: staging/$CI_COMMIT_BRANCH
+    env: staging
+  when: always
+  only:
+    - master
+    - /feature-.*/
 
-  
+activate_prod:
+  stage: deploy
+  script:
+    - ln -fsnv /var/www/test-app/${env}_$CI_COMMIT_SHA $docker_html_path/$deploy_subfolder
+  when: manual
+  only:
+    - master
   
   
 revert:
