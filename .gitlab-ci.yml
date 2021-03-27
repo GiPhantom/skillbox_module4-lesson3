@@ -61,7 +61,9 @@ deploy_prod:
   stage: deploy
   script:
     - cp -r build_$env $docker_html_path/test-app/${env}_$CI_COMMIT_SHA
-    - cp -Pv $docker_html_path/$deploy_subfolder $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
+      #ссылка на предыдущую папку, который ссылался раньше на /var/www/html (предыдущая версия)
+      #- cp -Pv $docker_html_path/$deploy_subfolder $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
+    - ln -fsnv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
   only:
     - master
 
@@ -88,11 +90,22 @@ revert:
   stage: revert
   tags:
     - stagshell
-
   when: manual
   script:
-    - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html  
-       
-        #- cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
+          #- cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html  
+    - rm $docker_html_path/$deploy_subfolder  
+    - cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
 
+revert_previous:
+  stage: revert
+  tags:
+    - stagshell
+  when: manual
+  script:
+    - rm $docker_html_path/$deploy_subfolder
+      # Поле удаления симлинка происходит копирование из симлинка где лежит предредудушая версия копируем в var/www/html     
+    - cp -Pv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA/pvev-version $docker_html_path/$deploy_subfolder 
+   
+                                                     
 
+                                                      #
