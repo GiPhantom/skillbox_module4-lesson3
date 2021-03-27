@@ -43,7 +43,7 @@ build_staging:
   extends: install_dependencies
   variables:
     env: staging
-    REACT_APP_WEBSITE_PREFIX: "[staging] "
+    REACT_APP_WEBSITE_PREFIX: "[staging]"
     PUBLIC_URL: "/$CI_COMMIT_BRANCH"
 
 deploy_staging:
@@ -94,7 +94,7 @@ revert:
   script:
           #- cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html  
     - rm $docker_html_path/$deploy_subfolder  
-    - cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
+    - cp -Pv --remove-destination $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA/prev-version $docker_html_path/html
 
 revert_previous_two:
   stage: revert
@@ -104,7 +104,7 @@ revert_previous_two:
   script:
     - rm $docker_html_path/$deploy_subfolder
       # Поле удаления симлинка происходит копирование из симлинка где лежит предредудушая версия копируем в var/www/html     
-    - cp -Pv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA/pvev-version $docker_html_path/$deploy_subfolder 
+    - cp -Pv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA${env}_$CI_COMMIT_BEFORE_SHA/pvev-version $docker_html_path/$deploy_subfolder 
    
                                                      
 
