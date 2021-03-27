@@ -5,7 +5,7 @@ stages:
   - revert
   
 variables:
-  docker_html_path: "/www"
+  docker_html_path: "/var/www"
   env: prod
   deploy_subfolder: html
 
@@ -96,7 +96,7 @@ revert:
     - rm $docker_html_path/$deploy_subfolder  
     - cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
 
-revert_previous:
+revert_previous_two:
   stage: revert
   tags:
     - stagshell
