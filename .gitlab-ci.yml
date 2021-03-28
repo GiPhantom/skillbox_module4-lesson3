@@ -10,7 +10,7 @@ variables:
   deploy_subfolder: html
 
 
-
+# install build $env prod React App
 install_dependencies:
   image: node:14.15.0-stretch
   stage: build
@@ -35,14 +35,17 @@ test:
     - stagshell  
   script:
     - cp -r build /www/test-app/$CI_COMMIT_SHA
-    - cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA/prev-version  
-    - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA /www/html  
+    #- cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA/prev-version
+    - cp -Pv $docker_html_path/staging/master  
+    - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA /$docker_html_path/staging/master  
   allow_failure: true
 
 build_staging:
+  # передаем переменную от stage: build
   extends: install_dependencies
   variables:
     env: staging
+    #Создание переменной для staging и настройка проекта React React App переменной % REACT_APP_WEBSITE_PREFIX% 
     REACT_APP_WEBSITE_PREFIX: "[staging]"
     PUBLIC_URL: "/$CI_COMMIT_BRANCH"
 
@@ -54,6 +57,7 @@ deploy_staging:
     deploy_subfolder: staging/$CI_COMMIT_BRANCH
     env: staging
   when: always
+  #make mistakes
   allow_failure: true
   only:
     - master
@@ -65,10 +69,11 @@ deploy_prod:
     - cp -r build_$env $docker_html_path/test-app/${env}_$CI_COMMIT_SHA
       #ссылка на предыдущую папку, который ссылался раньше на /var/www/html (предыдущая версия)
       #- cp -Pv $docker_html_path/$deploy_subfolder $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
+      #copy folder
     - ln -fsnv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
   only:
     - master
-
+#switching the active version
 activate_staging:
   extends: activate_prod
   variables:
@@ -90,15 +95,16 @@ activate_prod:
     - master
   
   
-revert:
-  stage: revert
-  tags:
-    - stagshell
-  when: manual
-  script:
+#revert:
+#  stage: revert
+#  tags:
+#    - stagshell
+#  when: manual
+#  script:
           #- cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html  
-    - rm $docker_html_path/$deploy_subfolder  
-    - cp -Pv --remove-destination $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA/prev-version $docker_html_path/html
+##    - rm $docker_html_path/$deploy_subfolder  
+    #- cp -Pv --remove-destination $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA/prev-version $docker_html_path/html
+##    - cp -Pv --remove-destination $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA/prev-version $docker_html_path/staging/master
 
 revert_previous_two:
   stage: revert
@@ -109,7 +115,4 @@ revert_previous_two:
     - rm $docker_html_path/$deploy_subfolder
       # Поcле удаления симлинка происходит копирование из симлинка где лежит предредудушая версия копируем в var/www/html     
     - cp -Pv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA${env}_$CI_COMMIT_BEFORE_SHA/pvev-version $docker_html_path/$deploy_subfolder 
-   
-                                                     
-
-                                                      #
+ #
