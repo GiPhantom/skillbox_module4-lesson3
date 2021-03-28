@@ -48,6 +48,8 @@ build_staging:
 
 deploy_staging:
   extends: deploy_prod
+  tags:
+    - stagshell 
   variables:
     deploy_subfolder: staging/$CI_COMMIT_BRANCH
     env: staging
@@ -79,6 +81,8 @@ activate_staging:
 
 activate_prod:
   stage: deploy
+  tags:
+    - stagshell 
   script:
     - ln -fsnv /var/www/test-app/${env}_$CI_COMMIT_SHA $docker_html_path/$deploy_subfolder
   when: manual
@@ -103,7 +107,7 @@ revert_previous_two:
   when: manual
   script:
     - rm $docker_html_path/$deploy_subfolder
-      # Поле удаления симлинка происходит копирование из симлинка где лежит предредудушая версия копируем в var/www/html     
+      # Поcле удаления симлинка происходит копирование из симлинка где лежит предредудушая версия копируем в var/www/html     
     - cp -Pv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA${env}_$CI_COMMIT_BEFORE_SHA/pvev-version $docker_html_path/$deploy_subfolder 
    
                                                      
