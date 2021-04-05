@@ -1,9 +1,9 @@
 stages:
   - build
-    #- test
+  #- test
   - deploy
   - revert
-  
+
 variables:
   docker_html_path: "/var/www"
   env: prod
@@ -32,11 +32,11 @@ install_dependencies:
 test:
   stage: deploy
   tags:
-    - stagshell  
+    - stagshell
   script:
     - cp -r build /www/test-app/$CI_COMMIT_SHA
-    - cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA/prev-version  
-    - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA /www/html  
+    - cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA/prev-version
+    - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA /www/html
   allow_failure: true
 
 build_staging:
@@ -82,8 +82,8 @@ activate_prod:
   when: manual
   only:
     - master
-  
-  
+
+
 revert:
   stage: revert
   tags:
@@ -91,8 +91,7 @@ revert:
 
   when: manual
   script:
-    - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html  
-       
-        #- cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
+    - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html
 
+    #- cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
 
