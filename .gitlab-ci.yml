@@ -1,11 +1,11 @@
 stages:
   - build
-  #- test
+ # - test
   - deploy
   - revert
 
 variables:
-  docker_html_path: "/var/www"
+  docker_html_path: "/www"
   env: prod
   deploy_subfolder: html
 
@@ -29,16 +29,6 @@ install_dependencies:
     paths:
       - node_modules
 
-test:
-  stage: deploy
-  tags:
-    - stagshell
-  script:
-    - cp -r build /www/test-app/$CI_COMMIT_SHA
-    - cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA/prev-version
-    - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA /www/html
-  allow_failure: true
-
 build_staging:
   extends: install_dependencies
   variables:
@@ -52,7 +42,7 @@ deploy_staging:
     deploy_subfolder: staging/$CI_COMMIT_BRANCH
     env: staging
   when: always
-  allow_failure: true
+#  allow_failure: true
   only:
     - master
     - /feature-.*/
@@ -83,6 +73,15 @@ activate_prod:
   only:
     - master
 
+#test:
+  #stage: deploy
+  #tags:
+   # - stagshell
+  #script:
+   # - cp -r build /www/test-app/$CI_COMMIT_SHA
+  #  - cp -Pv /www/html /www/test-app/$CI_COMMIT_SHA/prev-version
+ #   - ln -fsnv /var/www/test-app/$CI_COMMIT_SHA /www/html
+#  allow_failure: true
 
 revert:
   stage: revert
@@ -91,7 +90,7 @@ revert:
 
   when: manual
   script:
-    - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version /www/html
+    - cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/htm
 
     #- cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
 
