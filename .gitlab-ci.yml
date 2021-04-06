@@ -43,7 +43,7 @@ deploy_staging:
     deploy_subfolder: staging/$CI_COMMIT_BRANCH
     env: staging
   when: always
-#  allow_failure: true
+  allow_failure: true
   only:
     - master
     - /feature-.*/
