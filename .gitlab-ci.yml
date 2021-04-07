@@ -53,7 +53,7 @@ deploy_prod:
   script:
     - cp -r build_$env $docker_html_path/test-app/${env}_$CI_COMMIT_SHA
    # - cp -Pv $docker_html_path/$deploy_subfolder $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
-    - cp -Pv $docker_html_path/test-app/{env}_CI_COMMIT_BEFORE_SHA $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
+    - cp -Pv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA $docker_html_path/test-app/${env}_$CI_COMMIT_SHA/prev-version || true
   only:
     - master
 
@@ -92,7 +92,7 @@ revert:
   when: manual
   script:
     - rm -rf $docker_html_path/$deploy_subfolder
-    - cp -Pv $docker_html_path/test-app/{env}_CI_COMMIT_BEFORE_SHA/prev-version $docker_html_path/html
+    - cp -Pv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA/prev-version $docker_html_path/html
     ##- cp -Pv --remove-destination /www/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
 
     #- cp -Pv --remove-destination $docker_html_path/test-app/$CI_COMMIT_SHA/prev-version $docker_html_path/html
@@ -105,4 +105,4 @@ revert_previous:
   when: manual
   script:
     - rm -rf $docker_html_path/$deploy_subfolder
-    - cp -Pv $docker_html_path/test-app/{env}_CI_COMMIT_BEFORE_SHA/prev-version $docker_html_path/$deploy_subfolder
+    - cp -Pv $docker_html_path/test-app/${env}_$CI_COMMIT_BEFORE_SHA/prev-version $docker_html_path/$deploy_subfolder
